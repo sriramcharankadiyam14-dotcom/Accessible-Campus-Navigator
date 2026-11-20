@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LPU Accessible Campus Navigator</title>
+<meta name="theme-color" content="#1e3a8a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@600;700&display=swap">
+<style>
+:root{--bg:#f1f5fc;--card:#fff;--ink:#0f1b3d;--mut:#51607f;--line:#d9e1f0;--edge:#8190b0;--pri:#14246b;--pri2:#2f4fd8;--priInk:#fff;--acc:#f59e0b;--ok:#047857;--okbg:#dcfce7;--warn:#9a5200;--warnbg:#fff4d6;--bad:#b91c1c;--badbg:#fee2e2;--focus:#1d4ed8;--sh:0 8px 28px rgba(20,36,107,.10);--r:18px}
+body.hc{--bg:#000;--card:#000;--ink:#fff;--mut:#ffeb3b;--line:#fff;--edge:#fff;--pri:#ffeb3b;--pri2:#ffeb3b;--priInk:#000;--acc:#ffeb3b;--ok:#00ff9c;--okbg:#002b1c;--warn:#ffb000;--warnbg:#2b1b00;--bad:#ff6b6b;--badbg:#300;--focus:#00e5ff;--sh:none}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Atkinson Hyperlegible",Verdana,system-ui,sans-serif;background-image:radial-gradient(circle at 100% 0,rgba(47,79,216,.10),transparent 35%),radial-gradient(circle at 0 100%,rgba(245,158,11,.10),transparent 30%);background-attachment:fixed}
+body.hc{background-image:none}
+:focus-visible{outline:4px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+button,select,input{font:inherit}
+h1,h2,.hero-t{font-family:"Lexend","Atkinson Hyperlegible",Verdana,sans-serif}
+button{min-height:48px;border-radius:12px;border:2px solid transparent;background:linear-gradient(135deg,var(--pri),var(--pri2));color:var(--priInk);font-weight:700;padding:.45rem 1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(20,36,107,.22);transition:transform .15s,box-shadow .15s}
+button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(20,36,107,.28)}
+button:disabled{opacity:.5;cursor:not-allowed}
+body.hc button{background:var(--pri);box-shadow:none}
+button.alt{background:var(--card);color:var(--ink);border-color:var(--edge);box-shadow:none}
+button.danger{background:linear-gradient(135deg,#b91c1c,#e11d48);color:#fff}
+select,input[type=text]{width:100%;min-height:50px;padding:.4rem .8rem;border:2px solid var(--edge);border-radius:12px;background:var(--card);color:var(--ink)}
+header{background:linear-gradient(120deg,#0e1a55,#14246b 55%,#2f4fd8);color:#fff;padding:.8rem 1.2rem;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:space-between}
+body.hc header{background:#000;border-bottom:3px solid #ffeb3b}
+.brand{display:flex;gap:.8rem;align-items:center}
+.logo{width:48px;height:48px;border-radius:14px;background:var(--acc);color:#14246b;display:grid;place-items:center;font-size:1.6rem;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+header h1{margin:0;font-size:1.25rem;line-height:1.2}
+header p{margin:0;font-size:.9rem;opacity:.85}
+header button{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.45);box-shadow:none;backdrop-filter:blur(4px)}
+body.hc header button{background:#000;color:#ffeb3b;border-color:#ffeb3b}
+.banner{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--line);padding:.55rem 1.2rem;font-size:.95rem}
+.live{font-size:.9rem;font-weight:700;padding:.2rem .7rem;border-radius:99px;display:inline-flex;gap:.4rem;align-items:center}
+.live::before{content:"";width:.6rem;height:.6rem;border-radius:50%;background:currentColor}
+.live.on{background:var(--okbg);color:var(--ok)}.live.off{background:var(--warnbg);color:var(--warn)}
+.live.on::before{animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.wrap{max-width:62rem;margin:1.2rem auto;padding:0 1rem}
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:2rem 1.6rem;margin-bottom:1.2rem;color:#fff;background:linear-gradient(125deg,#0e1a55,#2340b8 60%,#4f6df0);box-shadow:var(--sh)}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{width:320px;height:320px;right:-80px;top:-120px;background:rgba(245,158,11,.30)}
+.hero::after{width:200px;height:200px;right:120px;bottom:-110px;background:rgba(255,255,255,.12)}
+body.hc .hero{background:#000;border:3px solid #ffeb3b}
+.eyebrow{margin:0;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.85rem;color:#fcd34d}
+.hero-t{font-size:clamp(1.6rem,4.5vw,2.5rem);line-height:1.15;margin:.3rem 0 .6rem;max-width:30rem;position:relative}
+.hero-t span{color:#fcd34d}
+.hero p.lead{max-width:36rem;margin:0 0 1rem;opacity:.92;position:relative}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;margin:0;padding:0;position:relative}
+.pills li{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:.25rem .8rem;font-weight:700;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.3rem;margin-bottom:1.2rem;box-shadow:var(--sh)}
+body.hc .card{border:2px solid #fff}
+h2{font-size:1.25rem;margin:.1rem 0 .6rem}
+label.f{display:block;font-weight:700;margin:.7rem 0 .25rem}
+.grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
+.mode{display:flex;gap:.7rem;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:pointer;align-items:flex-start;transition:border-color .15s,background .15s}
+.mode:hover{border-color:var(--pri2)}
+.mode input{width:1.4rem;height:1.4rem;margin-top:.2rem;accent-color:var(--pri2)}
+.mode:has(input:checked){border-color:var(--ok);background:var(--okbg)}
+.mode b{display:block}.mode span{color:var(--mut);font-size:.95rem}
+.chips{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))}
+.chip{display:flex;gap:.7rem;text-align:left;align-items:center;background:var(--card);color:var(--ink);border:2px solid var(--line);font-weight:400;min-height:68px;box-shadow:none;padding:.5rem .7rem}
+.chip:hover:not(:disabled){border-color:var(--pri2);box-shadow:var(--sh)}
+.chip b{display:block;line-height:1.25}.chip small{color:var(--mut);line-height:1.2;display:block}
+.ic{flex:none;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:1.4rem;background:#e6ecff}
+.chip:nth-child(3n+2) .ic{background:#fff0d4}.chip:nth-child(3n) .ic{background:#dcf7ea}
+body.hc .ic{background:#222!important}
+#mapscreen{display:none;max-width:92rem;margin:0 auto;padding:.9rem;grid-template-columns:minmax(18rem,27rem) 1fr;gap:.9rem}
+#mapscreen.on{display:grid}
+@media(max-width:820px){#mapscreen.on{display:block}}
+.pan{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--sh)}
+body.hc .pan{border:2px solid #fff}
+.stat{display:flex;gap:.6rem;margin:.7rem 0}
+.stat div{flex:1;text-align:center;border-radius:14px;padding:.55rem;background:#eef2ff;color:var(--pri)}
+.stat div:first-child{background:var(--okbg);color:var(--ok)}
+body.hc .stat div{background:#111;color:#fff}
+.stat b{font-size:1.35rem;display:block;font-family:Lexend,sans-serif}
+.stat span{font-size:.85rem}
+.tag{display:inline-block;font-weight:700;font-size:.8rem;border-radius:99px;padding:.05rem .6rem;margin-right:.4rem}
+.tag.ok{background:var(--okbg);color:var(--ok)}.tag.no{background:var(--warnbg);color:var(--warn)}
+.cur{border:3px solid var(--pri2);border-radius:16px;padding:.9rem;margin:.6rem 0;background:linear-gradient(180deg,#f5f8ff,#fff)}
+body.hc .cur{background:#000;border-color:#ffeb3b}
+.land{background:var(--warnbg);color:var(--ink);border-left:6px solid var(--acc);padding:.55rem .75rem;border-radius:10px;margin:.6rem 0}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+ol.steps{margin:.5rem 0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:.6rem .7rem .6rem 3rem;margin:.4rem 0;border:1px solid var(--line);border-radius:14px}
+ol.steps li::before{content:counter(s);position:absolute;left:.7rem;top:.6rem;width:1.9rem;height:1.9rem;border-radius:50%;background:var(--pri);color:var(--priInk);display:grid;place-items:center;font-weight:700;font-size:.9rem}
+ol.steps li:last-child::before{content:"🏁";background:none}
+ol.steps li.now{border:2px solid var(--pri2);background:#f1f5ff;font-weight:700}
+body.hc ol.steps li.now{background:#222}
+.mapbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.7rem;position:sticky;top:.6rem;box-shadow:var(--sh)}
+.mapbox svg{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line)}
+.zoom{display:flex;gap:.4rem;margin-bottom:.5rem;flex-wrap:wrap}
+.zoom button{min-width:48px}
+.inc{display:flex;justify-content:space-between;gap:.5rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--line)}
+.ov{position:fixed;inset:0;background:rgba(10,18,50,.62);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:1rem;z-index:10}
+.ov.on{display:flex}
+.modal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:22px;max-width:34rem;width:100%;max-height:90vh;overflow:auto;padding:1.3rem;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+body.hc .modal{border:3px solid #fff}
+.msg{background:var(--warnbg);border-left:6px solid var(--acc);padding:.65rem .85rem;border-radius:10px;margin:.6rem 0}
+.msg.bad{background:var(--badbg);border-color:var(--bad)}
+.bub{padding:.55rem .8rem;border-radius:14px;margin:.35rem 0;background:#eef2ff}
+.bub.me{background:var(--okbg);text-align:right}
+body.hc .bub{background:#222}
+#map .flow{stroke-dasharray:14 10;animation:dash 1.1s linear infinite}
+#map .pulse{animation:ping 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes dash{to{stroke-dashoffset:-24}}
+@keyframes ping{from{opacity:.7;transform:scale(.6)}to{opacity:0;transform:scale(2.4)}}
+@media(prefers-reduced-motion:reduce){#map .flow,#map .pulse,.live.on::before{animation:none}button{transition:none}}
+</style>
+</head>
+<body>
+<div id="live" class="sr" role="status" aria-live="assertive"></div>
+
+<header>
+<div class="brand"><div class="logo" aria-hidden="true">♿</div><div><h1>LPU Campus Navigator</h1><p>Step-free routes, voice guidance and live lift reports</p></div></div>
+<div class="row" style="margin:0">
+<button id="hcBtn" aria-pressed="false">High contrast</button>
+<button id="repBtn">⚠ Report issue</button>
+</div>
+</header>
+<div class="banner">
+<div><strong>Voice guide for blind students:</strong> say where you want to go.</div>
+<div class="row" style="margin:0"><span id="net" class="live off">Checking…</span><button id="vaBtn">🎙 TalkBack mode</button></div>
+</div>
+
+<main id="hub" class="wrap">
+<section class="hero">
+<p class="eyebrow">Lovely Professional University</p>
+<h2 class="hero-t">Find your way around campus, <span>without barriers.</span></h2>
+<p class="lead">Step-free routes, spoken landmark directions and live lift reports for wheelchair users and blind or low-vision students.</p>
+<ul class="pills"><li>♿ Step-free routing</li><li>🎙 Voice guide</li><li>📡 Live lift status</li><li>🗺 2D campus map</li></ul>
+</section>
+<div class="card">
+<h2>Where would you like to go?</h2>
+<div class="grid">
+<div><label class="f" for="from">Start location</label><select id="from"></select></div>
+<div><label class="f" for="to">Destination</label><select id="to"></select></div>
+</div>
+<fieldset style="border:0;padding:0;margin:.8rem 0 0">
+<legend class="f" style="padding:0">Route preference</legend>
+<div class="grid">
+<label class="mode"><input type="radio" name="mode" value="free" checked><span><b>♿ Step-free</b>Ramps, lifts and level paths. No stairs.</span></label>
+<label class="mode"><input type="radio" name="mode" value="fast"><span><b>⚡ Fastest</b>Shortest path. May use stairs.</span></label>
+</div>
+</fieldset>
+<div id="hubmsg" role="alert"></div>
+<div class="row"><button id="go">🗺 Show route on 2D map</button></div>
+</div>
+<div class="card"><h2>Quick destinations</h2><div id="chips" class="chips"></div></div>
+</main>
+
+<main id="mapscreen" aria-label="Route map and guidance">
+<aside>
+<div class="pan">
+<div class="row" style="margin:0"><button id="back" class="alt">← Change</button><span id="modetag" class="tag ok" style="align-self:center">Step-free</span></div>
+<p id="ends" style="font-weight:700;margin:.6rem 0 0"></p>
+<div class="stat"><div><b id="eta">–</b><span id="dist"></span></div><div><b id="stp">–</b><span>stairs on route</span></div></div>
+<div id="alt" class="msg" hidden></div>
+<button id="startNav" style="width:100%">▶ Start turn-by-turn guidance</button>
+</div>
+<div class="pan" id="navbox" hidden>
+<strong id="cnt"></strong>
+<div class="cur"><div id="stepTxt" style="font-size:1.15rem;font-weight:700"></div><div id="stepLand" class="land"></div></div>
+<div class="row"><button id="prev" class="alt">◀ Prev</button><button id="next">Next ▶</button><button id="listen" class="alt">🔊 Listen</button><button id="endNav" class="alt">End</button></div>
+</div>
+<div class="pan"><h2>All directions</h2><ol id="steps" class="steps"></ol></div>
+<div class="pan"><h2>Facility status</h2><div id="incs"></div></div>
+</aside>
+<section class="mapbox" aria-label="2D campus map">
+<div class="zoom"><button id="zi" class="alt" aria-label="Zoom in">＋</button><button id="zo" class="alt" aria-label="Zoom out">－</button><button id="zr" class="alt">Reset</button><span style="align-self:center;color:var(--mut);font-size:.9rem">Map is a visual aid. Directions on the left give the same route in words.</span></div>
+<svg id="map" viewBox="0 0 1000 640" role="img" aria-label="2D campus map with the route highlighted"></svg>
+<p style="margin:.4rem 0 0;font-size:.95rem">Blue line: route. Yellow: current step. Red dotted: out of service. <a id="gmap" href="https://www.google.com/maps/search/?api=1&query=Lovely+Professional+University+Phagwara" target="_blank" rel="noopener">Open real campus in Google Maps</a></p>
+</section>
+</main>
+
+<div id="vaM" class="ov" role="dialog" aria-modal="true" aria-labelledby="vaT"><div class="modal">
+<div class="row" style="justify-content:space-between;margin:0"><h2 id="vaT">🎙 TalkBack voice assistant</h2><button class="alt cl" aria-label="Close">✕</button></div>
+<p>Tap the microphone and say a place, for example “Block 34 lab 204”, “library” or “Uni-Mall”. Say “fastest” to allow stairs.</p>
+<button id="mic" style="width:100%;font-size:1.2rem">🎙 Tap to speak</button>
+<p id="vaStat" role="status" style="font-weight:700"></p>
+<label class="f" for="vaIn">Or type a destination</label>
+<input type="text" id="vaIn" autocomplete="off"><div class="row"><button id="vaGo">Go</button></div>
+<div id="vaLog" role="log" aria-label="Conversation"></div>
+</div></div>
+
+<div id="repM" class="ov" role="dialog" aria-modal="true" aria-labelledby="repT"><div class="modal">
+<div class="row" style="justify-content:space-between;margin:0"><h2 id="repT">⚠ Report an accessibility issue</h2><button class="alt cl" aria-label="Close">✕</button></div>
+<p>Reports are shared with every student straight away and routes update automatically. They expire after 8 hours.</p>
+<label class="f" for="rfac">Facility</label><select id="rfac"></select>
+<label class="f" for="rtype">What is wrong?</label>
+<select id="rtype"><option value="broken">Out of service / breakdown</option><option value="blocked">Blocked or under maintenance</option><option value="door">Automatic door jammed</option></select>
+<div id="repMsg" role="alert"></div>
+<div class="row"><button id="repGo" class="danger">🚨 Submit report</button></div>
+</div></div>
+
+<div id="rrM" class="ov" role="alertdialog" aria-modal="true" aria-labelledby="rrT"><div class="modal">
+<h2 id="rrT" style="color:var(--bad)">⚠ Your route changed</h2>
+<div id="rrBody"></div>
+<div class="row"><button id="rrOk">Accept and continue</button></div>
+</div></div>
+
+<script>
+/* ---------- DATA: places [name, short label, x, y, kind]. kind: b/o = building or landmark, i = indoor, j = junction ---------- */
+const P={
+out_gate:["Main Gate (GT Road)","Main Gate",60,320,"o"],
+out_hospital:["Uni-Hospital (Gate 1)","Hospital",90,520,"o"],
+rnd:["Central Roundabout","",340,320,"j"],
+out_unimall:["Uni-Mall Hub","Uni-Mall",340,170,"o"],
+jE:["Main avenue junction","",560,320,"j"],
+jS:["South avenue junction","",560,470,"j"],
+lib_g_foyer:["Central Library, ground-floor foyer","Library",560,180,"b"],
+lib_1_hall:["Central Library, first-floor reading hall","",590,160,"i"],
+b34_g_foyer:["Block 34 (CSE), ground-floor foyer","Block 34",700,320,"b"],
+b34_g_wc_accessible:["Block 34 accessible restroom (ground floor)","",725,345,"i"],
+b34_f2_lab204:["Block 34, Data Science and AI Lab 204 (floor 2)","",680,300,"i"],
+b33_g_seminar:["Block 33 (Sciences), Shanti Seminar Hall G01","Block 33",430,470,"b"],
+b33_f1_lab:["Block 33, first-floor science lab","",455,450,"i"],
+b35_out:["Outside Block 35 entrance","",730,520,"j"],
+b35_g_foyer:["Block 35 (Engineering), workshop foyer","Block 35",700,470,"b"],
+b36_g_hall:["Block 36 (Exam Centre), Mega Examination Hall","Block 36",860,470,"b"],
+b26_g_foyer:["Block 26 (Biotech), ground-floor foyer","Block 26",700,180,"b"],
+b27_g_foyer:["Block 27 (Biosciences), ground-floor foyer","Block 27",800,180,"b"],
+b28_g_hall:["Block 28 (Conference), Poster Hall","Block 28",860,320,"b"],
+b29_g_foyer:["Block 29 (Distance Education), foyer","Block 29",900,180,"b"],
+out_solar_complex:["City Centre (Solar), Exhibition Hall","City Centre",330,590,"o"],
+out_law_school:["LPU School of Law, Moot Court","School of Law",200,110,"o"],
+out_film_school:["School of Film, Soundstage","Film School",110,210,"o"],
+out_education_dept:["Department of Education","Education",200,420,"o"],
+out_gurudwara:["Gurudwara Sahib","Gurudwara",120,60,"o"],
+out_cricket_ground:["Cricket Stadium","Cricket",900,590,"o"],
+out_helipad:["VIP Helipad","Helipad",960,60,"o"]};
+const FAC={b34_lift_a:"Block 34 Lift A (East Wing)",b34_lift_b:"Block 34 Lift B (West Wing)",b33_lift:"Block 33 Main Passenger Lift",lib_lift:"Central Library Glass Panoramic Lift",b35_ramp:"Block 35 Side Ramp"};
+/* edges: a, b, metres, type (walk|ramp|steps|lift), facility, landmark text (direction neutral) */
+const E=[
+["out_gate","rnd",280,"walk","","Keep to the continuous yellow tactile strip along the main avenue."],
+["out_gate","out_hospital",200,"walk","","Keep the boundary wall beside you; the tactile strip runs along the pavement."],
+["out_hospital","rnd",300,"walk","","Follow the wide paved road on the tactile strip; the surface is level."],
+["rnd","out_unimall",150,"walk","","You will hear the Uni-Mall food courts getting louder as you approach."],
+["rnd","jE",220,"walk","","Continue on the tactile strip along the main avenue."],
+["jE","lib_g_foyer",140,"walk","","The Central Library is the large glass-fronted building; enter through the automatic doors."],
+["jE","b34_g_foyer",140,"walk","","Block 34 has automatic doors and a reception desk just inside."],
+["jE","jS",150,"walk","","Stay on the tactile strip heading south along the avenue."],
+["jS","b33_g_seminar",130,"walk","","Block 33 foyer has a level entrance; the seminar hall is on the ground floor."],
+["jS","b35_out",175,"walk","","Follow the paved path; workshop machinery can be heard near Block 35."],
+["b35_out","b35_g_foyer",12,"steps","","The main entrance has 6 steps with a handrail."],
+["b35_out","b35_g_foyer",40,"ramp","b35_ramp","The side ramp has a gentle slope with handrails on both sides."],
+["b35_out","b36_g_hall",150,"walk","","Continue east on the paved path toward the large Exam Centre."],
+["lib_g_foyer","lib_1_hall",30,"steps","","The wide staircase is beside the information desk, with handrails on both sides."],
+["lib_g_foyer","lib_1_hall",40,"lift","lib_lift","The glass lift is beside the information desk. Buttons have Braille."],
+["b34_g_foyer","b34_g_wc_accessible",20,"walk","","The accessible restroom is opposite the reception desk."],
+["b34_g_foyer","b34_f2_lab204",40,"steps","","The staircase is behind the reception desk, with a landing halfway."],
+["b34_g_foyer","b34_f2_lab204",55,"lift","b34_lift_a","Lift A is at the east end of the foyer. Buttons have Braille and the lift announces floors."],
+["b34_g_foyer","b34_f2_lab204",50,"lift","b34_lift_b","Lift B is at the west end of the foyer. Buttons have Braille and the lift announces floors."],
+["b33_g_seminar","b33_f1_lab",30,"steps","","The staircase is opposite the seminar hall."],
+["b33_g_seminar","b33_f1_lab",45,"lift","b33_lift","The passenger lift is next to the notice board. Buttons have Braille."],
+["rnd","out_solar_complex",270,"walk","","Follow the tactile strip south; the exhibition hall has a wide level entrance."],
+["b33_g_seminar","out_solar_complex",156,"walk","","Follow the paved path southwest toward the solar canopy."],
+["rnd","out_education_dept",170,"walk","","Follow the path west; the Education lawns are beside the path."],
+["out_unimall","out_law_school",190,"walk","","Follow the tactile strip northwest away from the Uni-Mall noise."],
+["out_law_school","out_film_school",135,"walk","","Follow the paved path southwest."],
+["out_film_school","out_gate",120,"walk","","Follow the path south toward the GT Road traffic noise."],
+["out_law_school","out_gurudwara",95,"walk","","Follow the marble-paved path; you may hear devotional music."],
+["lib_g_foyer","b26_g_foyer",140,"walk","","Follow the paved path east along the front of the Library."],
+["b26_g_foyer","b27_g_foyer",100,"walk","","Continue east on the paved path."],
+["b27_g_foyer","b29_g_foyer",100,"walk","","Continue east on the paved path."],
+["b29_g_foyer","out_helipad",135,"walk","","Follow the path north to the open apron."],
+["b34_g_foyer","b28_g_hall",160,"walk","","Follow the paved path east."],
+["b29_g_foyer","b28_g_hall",146,"walk","","Follow the paved path south."],
+["b28_g_hall","b36_g_hall",150,"walk","","Follow the paved path south."],
+["b36_g_hall","out_cricket_ground",126,"walk","","Follow the path south; you will hear the sports ground."]
+].map((e,i)=>({a:e[0],b:e[1],m:e[2],t:e[3],f:e[4],s:e[5],i}));
+
+const CHIPS=[["💻","b34_f2_lab204","Block 34 (CSE)","Data Science & AI, floor 2"],["🏢","b33_g_seminar","Block 33 (Sciences)","Shanti Seminar Hall"],["⚙️","b35_g_foyer","Block 35 (Engineering)","Workshops"],["📝","b36_g_hall","Block 36 (Exam Centre)","Mega Exam Hall"],["🔬","b26_g_foyer","Block 26 (Biotech)","Research labs"],["🧬","b27_g_foyer","Block 27 (Biosciences)","Molecular lab"],["🏛️","b28_g_hall","Block 28 (Conference)","Poster Hall"],["📚","b29_g_foyer","Block 29 (Distance Ed)","Coordination wing"],["📖","lib_g_foyer","Central Library","Braille & quiet study"],["🛍️","out_unimall","Uni-Mall Hub","Food courts"],["🏥","out_hospital","Uni-Hospital","24/7 clinic, Gate 1"],["🚻","b34_g_wc_accessible","Accessible restroom","Block 34 ground floor"],["☀️","out_solar_complex","City Centre (Solar)","Exhibition hall"],["⚖️","out_law_school","School of Law","Moot Court"],["🎬","out_film_school","School of Film","Soundstage"],["🎓","out_education_dept","Dept. of Education","Teacher training"],["🕌","out_gurudwara","Gurudwara Sahib","Marble court"],["🏏","out_cricket_ground","Cricket Stadium","400 m track"],["🚁","out_helipad","VIP Helipad","Aviation apron"]];
+
+/* ---------- ROUTER ---------- */
+let down={};   // facility -> incident
+function route(from,to,mode){
+const d={},prev={},done={};for(const k in P)d[k]=Infinity;d[from]=0;
+for(;;){let u=null;for(const k in d)if(!done[k]&&d[k]<Infinity&&(u===null||d[k]<d[u]))u=k;
+if(u===null||u===to)break;done[u]=1;
+for(const e of E){if(e.t==="steps"&&mode==="free")continue;if(e.f&&down[e.f])continue;
+let v=null,fw=true;if(e.a===u)v=e.b;else if(e.b===u){v=e.a;fw=false}if(v===null)continue;
+const w=e.m+(e.t==="lift"?20:0);if(d[u]+w<d[v]){d[v]=d[u]+w;prev[v]={u,e,fw}}}}
+if(d[to]===Infinity)return null;
+const legs=[];let c=to;while(c!==from){const p=prev[c];legs.unshift({e:p.e,from:p.u,to:c});c=p.u}
+const m=legs.reduce((s,l)=>s+l.e.m,0),sec=legs.reduce((s,l)=>s+l.e.m/1.1+(l.e.t==="lift"?40:0),0);
+return{legs,m,min:Math.max(1,Math.round(sec/60)),stairs:legs.filter(l=>l.e.t==="steps").length};}
+function instr(l){const n=P[l.to][0],e=l.e;
+return e.t==="lift"?"Use "+FAC[e.f]+" to reach "+n+".":e.t==="steps"?"Take the stairs to "+n+".":e.t==="ramp"?"Take the ramp to "+n+".":"Walk about "+e.m+" metres to "+n+".";}
+/*UI*/
+const $=id=>document.getElementById(id),el=(t,c,x)=>{const n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n};
+const S={from:"out_gate",to:"b34_f2_lab204",mode:"free",route:null,step:0,live:false};
+function say(t){const l=$("live");l.textContent="";setTimeout(()=>l.textContent=t,50)}
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-IN";speechSynthesis.speak(u)}catch(e){}}
+function openM(id){const m=$(id);m.classList.add("on");const b=m.querySelector("button,select,input");if(b)b.focus()}
+function closeM(m){m.classList.remove("on")}
+document.querySelectorAll(".ov").forEach(m=>{m.addEventListener("keydown",e=>{if(e.key==="Escape")closeM(m)});m.querySelectorAll(".cl").forEach(b=>b.onclick=()=>closeM(m))});
+
+/* populate */
+const ids=Object.keys(P).filter(k=>P[k][4]!=="j").sort((a,b)=>P[a][0].localeCompare(P[b][0]));
+ids.forEach(k=>{["from","to"].forEach(s=>{const o=el("option","",P[k][0]);o.value=k;$(s).appendChild(o)})});
+$("from").value=S.from;$("to").value=S.to;
+Object.keys(FAC).forEach(k=>{const o=el("option","",FAC[k]);o.value=k;$("rfac").appendChild(o)});
+CHIPS.forEach(c=>{const b=el("button","chip");b.type="button";b.append(el("span","ic",c[0]));const d=el("span");d.append(el("b","",c[2]),el("small","",c[3]));b.appendChild(d);
+b.onclick=()=>{$("to").value=c[1];go()};$("chips").appendChild(b)});
+document.querySelectorAll("input[name=mode]").forEach(r=>r.onchange=()=>{S.mode=r.value;if($("mapscreen").classList.contains("on"))go()});
+$("hcBtn").onclick=()=>{const on=document.body.classList.toggle("hc");$("hcBtn").setAttribute("aria-pressed",on)};
+
+/* routing and screens */
+function go(){
+S.from=$("from").value;S.to=$("to").value;S.mode=document.querySelector("input[name=mode]:checked").value;
+const hm=$("hubmsg");hm.replaceChildren();
+if(S.from===S.to){hm.appendChild(el("div","msg","Start and destination are the same place."));return}
+S.route=route(S.from,S.to,S.mode);S.step=0;
+$("hub").style.display="none";$("mapscreen").classList.add("on");
+$("navbox").hidden=true;render();$("startNav").focus();
+say(S.route?"Route ready. "+S.route.m+" metres, about "+S.route.min+" minutes.":"No route available with your current preference.");}
+function render(){
+const r=S.route,a=$("alt");a.hidden=true;
+$("ends").textContent=P[S.from][0]+" → "+P[S.to][0];
+$("modetag").textContent=S.mode==="free"?"Step-free":"Fastest";
+const ol=$("steps");ol.replaceChildren();
+if(!r){$("eta").textContent="–";$("dist").textContent="";$("stp").textContent="–";a.hidden=false;a.className="msg bad";
+a.textContent="No "+(S.mode==="free"?"step-free ":"")+"route right now"+(Object.keys(down).length?" because of reported out-of-service facilities":"")+". Ask the Accessibility Desk for help, or choose another destination.";
+$("startNav").disabled=true;drawMap();renderInc();return}
+$("startNav").disabled=false;
+$("eta").textContent=r.min+" min";$("dist").textContent=r.m+" metres";$("stp").textContent=r.stairs?r.stairs+" set"+(r.stairs>1?"s":""):"None";
+if(S.mode==="fast"&&r.stairs){a.hidden=false;a.className="msg";a.textContent="This route uses stairs. Choose Step-free if you cannot use them."}
+r.legs.forEach((l,i)=>{const li=el("li",i===S.step?"now":"");const ok=l.e.t!=="steps";
+li.append(el("span","tag "+(ok?"ok":"no"),ok?(l.e.t==="lift"?"Lift":l.e.t==="ramp"?"Ramp":"Level"):"Stairs"),document.createTextNode(instr(l)+" "+l.e.s));ol.appendChild(li)});
+const fin=el("li","","You have arrived at "+P[S.to][0]+".");fin.style.fontWeight="700";ol.appendChild(fin);
+if(!$("navbox").hidden)showStep();drawMap();renderInc();}
+function showStep(){const r=S.route,l=r.legs[S.step];
+$("cnt").textContent="STEP "+(S.step+1)+" OF "+r.legs.length;
+$("stepTxt").textContent=instr(l);$("stepLand").textContent="📍 Landmark: "+l.e.s;
+$("prev").disabled=S.step===0;$("next").textContent=S.step===r.legs.length-1?"Finish ✓":"Next ▶";
+say("Step "+(S.step+1)+". "+instr(l)+" "+l.e.s);drawMap();
+document.querySelectorAll("#steps li").forEach((li,i)=>li.classList.toggle("now",i===S.step));}
+$("startNav").onclick=()=>{$("navbox").hidden=false;S.step=0;showStep();$("next").focus()};
+$("next").onclick=()=>{if(S.step<S.route.legs.length-1){S.step++;showStep()}else{$("navbox").hidden=true;say("You have arrived at "+P[S.to][0]);speak("You have arrived at "+P[S.to][0])}};
+$("prev").onclick=()=>{if(S.step>0){S.step--;showStep()}};
+$("listen").onclick=()=>{const l=S.route.legs[S.step];speak(instr(l)+" "+l.e.s)};
+$("endNav").onclick=()=>{$("navbox").hidden=true;try{speechSynthesis.cancel()}catch(e){}drawMap()};
+$("back").onclick=()=>{$("mapscreen").classList.remove("on");$("hub").style.display="";S.route=null;$("go").focus()};
+$("go").onclick=go;
+
+/* ---------- 2D MAP ---------- */
+let vb=[0,0,1000,640];
+function zoom(f){const cx=vb[0]+vb[2]/2,cy=vb[1]+vb[3]/2,w=Math.min(1000,vb[2]*f),h=w*.64;vb=[Math.max(0,Math.min(1000-w,cx-w/2)),Math.max(0,Math.min(640-h,cy-h/2)),w,h];$("map").setAttribute("viewBox",vb.join(" "))}
+$("zi").onclick=()=>zoom(.7);$("zo").onclick=()=>zoom(1.4);$("zr").onclick=()=>{vb=[0,0,1000,640];$("map").setAttribute("viewBox","0 0 1000 640")};
+function drawMap(){
+const s=$("map"),NS="http://www.w3.org/2000/svg";s.replaceChildren();
+const mk=(t,a,x)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);if(x!=null)n.textContent=x;s.appendChild(n);return n};
+const hc=document.body.classList.contains("hc"),C=hc?{g:"#111",r:"#555",rc:"#999",b:"#222",b2:"#222",bs:"#fff",t:"#fff",rt:"#00e5ff",cur:"#ffeb3b",tree:"#222"}:{g:"#d9ead3",r:"#ffffff",rc:"#c3cbd8",b:"#e3ebff",b2:"#fff0d4",bs:"#4b5b8a",t:"#0f1b3d",rt:"#2f4fd8",cur:"#fbbf24",tree:"#b9d8b0"};
+mk("rect",{x:0,y:0,width:1000,height:640,fill:C.g});
+for(let i=0;i<46;i++){const x=40+(i*337)%940,y=20+(i*211)%600;mk("circle",{cx:x,cy:y,r:9+(i%4)*2,fill:C.tree})}
+mk("rect",{x:0,y:0,width:26,height:640,fill:hc?"#444":"#9ca3af"});
+mk("text",{x:13,y:320,transform:"rotate(-90 13 320)","text-anchor":"middle","font-size":13,fill:C.t,"font-weight":700},"G.T. Road (NH 44)");
+const XY=k=>[P[k][2],P[k][3]],off=e=>e.t==="lift"?[7,7]:[0,0];
+E.forEach(e=>{if(P[e.a][4]==="i"||P[e.b][4]==="i")return;const a=XY(e.a),b=XY(e.b);
+mk("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:C.rc,"stroke-width":14,"stroke-linecap":"round"});});
+E.forEach(e=>{if(P[e.a][4]==="i"||P[e.b][4]==="i")return;const a=XY(e.a),b=XY(e.b);
+mk("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:C.r,"stroke-width":10,"stroke-linecap":"round"});});
+for(const k in P){const p=P[k];if(p[4]==="b"||p[4]==="o"){mk("rect",{x:p[2]-40,y:p[3]-22,width:80,height:44,rx:12,fill:p[4]==="b"?C.b:C.b2,stroke:C.bs,"stroke-width":2});
+mk("text",{x:p[2],y:p[3]+5,"text-anchor":"middle","font-size":12.5,"font-weight":700,fill:C.t},p[1])}}
+E.forEach(e=>{if(e.f&&down[e.f]){const a=XY(e.a),b=XY(e.b),x=(a[0]+b[0])/2+8,y=(a[1]+b[1])/2+8;
+mk("circle",{cx:x,cy:y,r:10,fill:"#b91c1c",stroke:"#fff","stroke-width":2});mk("text",{x:x,y:y+4,"text-anchor":"middle","font-size":12,fill:"#fff","font-weight":700},"✕")}});
+const r=S.route;if(r){
+r.legs.forEach((l,i)=>{const a=XY(l.from),b=XY(l.to),o=off(l.e),cur=!$("navbox").hidden&&i===S.step;
+const at={x1:a[0]+o[0],y1:a[1]+o[1],x2:b[0]+o[0],y2:b[1]+o[1],"stroke-linecap":"round"};
+if(cur)mk("line",Object.assign({stroke:C.cur,"stroke-width":18},at));
+mk("line",Object.assign({stroke:C.rt,"stroke-width":7,"stroke-dasharray":l.e.t==="steps"?"2 9":"0"},l.e.t==="steps"?{}:{class:"flow"},at));
+if(cur){const q=XY(l.to);mk("circle",{cx:q[0],cy:q[1],r:12,fill:C.cur,class:"pulse"})}});
+r.legs.forEach((l,i)=>{const a=XY(l.from),b=XY(l.to),o=off(l.e),x=(a[0]+b[0])/2+o[0],y=(a[1]+b[1])/2+o[1];
+if(l.e.m<30&&P[l.from][4]!=="i"&&P[l.to][4]!=="i")return;
+mk("circle",{cx:x,cy:y-14,r:10,fill:C.b,stroke:C.rt,"stroke-width":2});mk("text",{x:x,y:y-10,"text-anchor":"middle","font-size":11.5,"font-weight":700,fill:C.t},String(i+1))});
+[[S.from,"S","#047857"],[S.to,"E","#b91c1c"]].forEach(m=>{const p=XY(m[0]);mk("circle",{cx:p[0],cy:p[1]-26,r:14,fill:m[2],stroke:"#fff","stroke-width":2});mk("text",{x:p[0],y:p[1]-21,"text-anchor":"middle","font-size":14,"font-weight":700,fill:"#fff"},m[1])})}
+}
+
+/* ---------- INCIDENTS: shared via backend, local fallback ---------- */
+const API=location.protocol==="file:"?null:"";
+function setNet(on,txt){S.live=on;$("net").className="live "+(on?"on":"off");$("net").textContent=txt}
+function loadLocal(){try{return JSON.parse(localStorage.getItem("lpu_inc")||"[]")}catch(e){return[]}}
+function saveLocal(a){try{localStorage.setItem("lpu_inc",JSON.stringify(a))}catch(e){}}
+function applyIncidents(list,quiet){
+const before=S.route?S.route.legs.map(l=>l.e.i).join():"",hadRoute=!!S.route;
+down={};list.forEach(i=>down[i.facility]=i);
+if($("mapscreen").classList.contains("on")){S.route=route(S.from,S.to,S.mode);const after=S.route?S.route.legs.map(l=>l.e.i).join():"";
+if(!quiet&&before!==after&&hadRoute)reroute();render()}else renderInc()}
+function reroute(){const b=$("rrBody");b.replaceChildren();const r=S.route;
+b.appendChild(el("p","",r?"A lift or ramp on your route has been reported out of service. A new "+(S.mode==="free"?"step-free ":"")+"route is ready: "+r.m+" metres, about "+r.min+" minutes.":"A lift or ramp on your route has been reported out of service and there is no "+(S.mode==="free"?"step-free ":"")+"alternative right now. Please contact the Accessibility Desk."));
+openM("rrM");S.step=0;const t=r?"Route changed. New route "+r.m+" metres, about "+r.min+" minutes.":"No step-free route is available now.";say(t);speak(t)}
+$("rrOk").onclick=()=>{closeM($("rrM"));$("navbox").hidden=true;$("startNav").focus()};
+function renderInc(){const box=$("incs");box.replaceChildren();const l=Object.values(down);
+if(!l.length){const p=el("p","","✅ All lifts and ramps are working.");p.style.color="var(--ok)";box.appendChild(p);return}
+l.forEach(i=>{const d=el("div","inc");const t=el("div");t.append(el("b","",FAC[i.facility]),el("div","","Reported "+new Date(i.at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})));d.appendChild(t);
+const b=el("button","alt","Working again");b.setAttribute("aria-label","Mark "+FAC[i.facility]+" as working again");b.onclick=()=>resolve(i.facility);d.appendChild(b);box.appendChild(d)})}
+async function post(url,body){const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})});return{ok:r.ok,status:r.status,data:await r.json()}}
+$("repBtn").onclick=()=>{$("repMsg").replaceChildren();openM("repM")};
+$("repGo").onclick=async()=>{const f=$("rfac").value,t=$("rtype").value,m=$("repMsg");m.replaceChildren();
+try{if(S.live){const r=await post("/api/incidents",{facility:f,type:t});if(!r.ok){m.appendChild(el("div","msg bad",r.data.error||"Could not send report."));return}applyIncidents(r.data)}
+else{const a=loadLocal().filter(i=>i.facility!==f);a.push({facility:f,type:t,at:Date.now()});saveLocal(a);applyIncidents(a)}
+closeM($("repM"));say(FAC[f]+" reported out of service. Routes updated.")}catch(e){m.appendChild(el("div","msg bad","Could not reach the server. Try again."))}};
+async function resolve(f){try{if(S.live){const r=await post("/api/incidents/"+f+"/resolve");if(!r.ok){say(r.data.error||"Not allowed");return}applyIncidents(r.data,true)}
+else{const a=loadLocal().filter(i=>i.facility!==f);saveLocal(a);applyIncidents(a,true)}say(FAC[f]+" marked as working.")}catch(e){}}
+function startLive(){
+if(API===null){setNet(false,"Offline mode: reports stay on this device");applyIncidents(loadLocal(),true);return}
+fetch("/api/incidents").then(r=>r.json()).then(l=>{setNet(true,"Live: reports shared with all students");applyIncidents(l,true);
+try{const es=new EventSource("/api/events");es.onmessage=e=>applyIncidents(JSON.parse(e.data),false);es.onerror=()=>setNet(false,"Reconnecting…");es.onopen=()=>setNet(true,"Live: reports shared with all students")}catch(e){}})
+.catch(()=>{setNet(false,"Offline mode: reports stay on this device");applyIncidents(loadLocal(),true)})}
+
+/* ---------- VOICE ASSISTANT ---------- */
+const STOP="the a an of to in at and block floor hall lab room go take me please navigate".split(" ");
+function match(t){t=t.toLowerCase();let best=null,sc=0;
+CHIPS.map(c=>c[1]).concat(["lib_1_hall"]).forEach(k=>{const words=(P[k][0]+" "+(P[k][1]||"")).toLowerCase().split(/[^a-z0-9]+/).filter(w=>w&&!STOP.includes(w));
+let n=0;new Set(words).forEach(w=>{if(new RegExp("\\b"+w+"\\b").test(t))n++});if(/\b(floor|first|upstairs)\b/.test(t)&&k==="lib_1_hall")n+=.5;if(n>sc){sc=n;best=k}});
+return best}
+function logv(t,me){const b=el("div","bub"+(me?" me":""),t);$("vaLog").appendChild(b);b.scrollIntoView({block:"nearest"})}
+function voiceGo(text){logv(text,true);const k=match(text);
+if(!k){const m="Sorry, I did not catch a campus place. Try a block number, library, Uni-Mall or hospital.";logv(m);speak(m);return}
+const fast=/\b(fast|fastest|shortest|stairs)\b/.test(text.toLowerCase());
+$("to").value=k;document.querySelector("input[name=mode][value="+(fast?"fast":"free")+"]").checked=true;
+const fromSel=$("from").value;if(fromSel===k)$("from").value="out_gate";
+closeM($("vaM"));go();
+const r=S.route;let m;
+if(!r)m="There is no "+(fast?"":"step-free ")+"route to "+P[k][0]+" right now. A lift or ramp may be out of service. Please contact the Accessibility Desk.";
+else m="Route to "+P[k][0]+". "+r.m+" metres, about "+r.min+" minutes. "+r.legs.map((l,i)=>"Step "+(i+1)+". "+instr(l)+" "+l.e.s).join(" ")+" You will have arrived.";
+speak(m);logv(m)}
+$("vaBtn").onclick=()=>{$("vaLog").replaceChildren();logv("Welcome to LPU Voice Navigator. Where would you like to go?");openM("vaM");speak("Welcome to LPU Voice Navigator. Where would you like to go? Tap the large microphone button and speak.")};
+$("vaGo").onclick=()=>{const v=$("vaIn").value.trim();if(v){$("vaIn").value="";voiceGo(v)}};
+$("vaIn").onkeydown=e=>{if(e.key==="Enter")$("vaGo").click()};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+$("mic").onclick=()=>{if(!SR){$("vaStat").textContent="Speech recognition is not supported in this browser. Type your destination below.";return}
+try{speechSynthesis.cancel()}catch(e){}
+const r=new SR();r.lang="en-IN";r.onstart=()=>$("vaStat").textContent="Listening…";r.onerror=()=>$("vaStat").textContent="I could not hear you. Tap and try again.";
+r.onresult=e=>{$("vaStat").textContent="";voiceGo(e.results[0][0].transcript)};r.start()};
+
+startLive();
+</script>
+</body>
+</html>
